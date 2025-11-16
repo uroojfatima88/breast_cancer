@@ -16,6 +16,12 @@ from sklearn.datasets import load_breast_cancer
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+try:
+    import matplotlib.pyplot as plt
+except ModuleNotFoundError:
+    import sys
+    sys.exit("matplotlib is not installed! Check your requirements.txt")
+
 
 # ----------------------------
 # Configuration
@@ -178,5 +184,6 @@ ax_db.legend()
 st.pyplot(fig_db)
 
 st.success("🎉 Interactive PCA & ML Pipeline Complete!")
+
 
 
