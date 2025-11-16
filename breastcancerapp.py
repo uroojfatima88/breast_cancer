@@ -7,11 +7,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import streamlit as st
 from sklearn.datasets import load_breast_cancer
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import joblib
 
 
 
@@ -176,6 +176,7 @@ ax_db.legend()
 st.pyplot(fig_db)
 
 st.success("🎉 Interactive PCA & ML Pipeline Complete!")
+
 
 
 
