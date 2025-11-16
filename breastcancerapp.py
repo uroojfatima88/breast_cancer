@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import joblib
+import streamlit as st
 from sklearn.datasets import load_breast_cancer
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
@@ -181,6 +181,7 @@ ax_db.legend()
 st.pyplot(fig_db)
 
 st.success("🎉 Interactive PCA & ML Pipeline Complete!")
+
 
 
 
