@@ -1,0 +1,4 @@
+class,precision,recall,f1-score,support
+benign,0.99,0.97,0.98,72
+macro,0.97,0.97,0.97,114
+weighted,0.97,0.97,0.97,114
