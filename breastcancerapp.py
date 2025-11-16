@@ -4,6 +4,7 @@ streamlit_app.py
 
 Streamlit Web App – Advanced Breast Cancer Classification with PCA & Trained Model
 """
+python -c "import matplotlib.pyplot as plt; import seaborn as sns"
 
 import os
 import streamlit as st
@@ -184,6 +185,7 @@ ax_db.legend()
 st.pyplot(fig_db)
 
 st.success("🎉 Interactive PCA & ML Pipeline Complete!")
+
 
 
 
