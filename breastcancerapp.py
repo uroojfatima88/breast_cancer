@@ -1,9 +1,11 @@
+
 """
 streamlit_app.py
 
 Streamlit Web App – Advanced Breast Cancer Classification with PCA & Trained Model
 """
 
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -20,6 +22,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 # ----------------------------
 st.set_page_config(page_title="Breast Cancer PCA & ML Pipeline", layout="wide")
 OUT_DIR = "outputs"
+os.makedirs(OUT_DIR, exist_ok=True)
 
 # ----------------------------
 # Load Data
@@ -37,17 +40,19 @@ y = df["target"]
 target_names = data.target_names
 
 # ----------------------------
-# Sidebar - Model Selection
+# Sidebar - User Settings
 # ----------------------------
 st.sidebar.header("Settings")
 show_data = st.sidebar.checkbox("Show Dataset", value=True)
 show_summary = st.sidebar.checkbox("Show Summary Statistics", value=True)
 show_class_dist = st.sidebar.checkbox("Show Class Distribution", value=True)
 
-model_files = [f for f in ["best_model_Logistic_Regression.pkl",
-                           "best_model_Random_Forest.pkl",
-                           "best_model_SVM_(RBF).pkl"]]
-model_files = [f for f in model_files if os.path.exists(f"{OUT_DIR}/{f}")]
+# List trained model files
+model_files = [f for f in [
+    "best_model_Logistic_Regression.pkl",
+    "best_model_Random_Forest.pkl",
+    "best_model_SVM_(RBF).pkl"
+] if os.path.exists(f"{OUT_DIR}/{f}")]
 best_model_file = st.sidebar.selectbox("Select Trained Model", model_files)
 
 # ----------------------------
@@ -85,7 +90,7 @@ n_components_95 = pca_95.n_components_
 st.subheader("PCA Analysis")
 st.write(f"Number of components for 95% variance: **{n_components_95}**")
 
-# Explained variance plot
+# Explained variance plots
 explained_ratio = pca_95.explained_variance_ratio_
 cum_explained = np.cumsum(explained_ratio)
 
@@ -112,15 +117,12 @@ best_model_path = f"{OUT_DIR}/{best_model_file}"
 best_model = joblib.load(best_model_path)
 st.write(f"Loaded trained model: **{best_model_file.replace('best_model_','').replace('.pkl','')}**")
 
-# Transform features using PCA
-X_train_pca = X_pca  # using entire dataset for visualization
+# Predict on full dataset
+X_train_pca = X_pca
 y_train = y.values
-
-# Predict on entire dataset
 y_pred = best_model.predict(X_train_pca)
 acc = accuracy_score(y_train, y_pred)
 cm = confusion_matrix(y_train, y_pred)
-cr = classification_report(y_train, y_pred, target_names=target_names, zero_division=0)
 
 st.write(f"**Accuracy on full dataset:** `{acc:.4f}`")
 
@@ -133,7 +135,8 @@ ax_cm.set_ylabel("Actual")
 st.pyplot(fig_cm)
 
 st.subheader("Classification Report")
-st.dataframe(pd.DataFrame(classification_report(y_train, y_pred, target_names=target_names, output_dict=True)).transpose())
+cr_df = pd.DataFrame(classification_report(y_train, y_pred, target_names=target_names, output_dict=True)).transpose()
+st.dataframe(cr_df)
 
 # ----------------------------
 # 2D PCA Visualization + Decision Boundary
@@ -143,7 +146,6 @@ st.subheader("PCA 2D Visualization & Decision Boundary")
 pca2 = PCA(n_components=2)
 X_2d = pca2.fit_transform(X_scaled)
 
-# Retrain model on 2D PCA for decision boundary
 best_model.fit(X_2d, y_train)
 
 # Scatter plot
@@ -176,4 +178,5 @@ ax_db.legend()
 st.pyplot(fig_db)
 
 st.success("🎉 Interactive PCA & ML Pipeline Complete!")
+
 
